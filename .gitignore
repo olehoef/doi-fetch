@@ -6,4 +6,4 @@
 /requirements.txt
 /sample.json
 /textual_demo_2024-04-02T17_28_47_274553.svg
-persistence/*
+doi_fetch/persistence
