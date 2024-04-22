@@ -33,6 +33,15 @@ def doi_fetch(ctx, new, project_name):
             
         # Create new project
         else:
+            click.echo('Please provide some information to configure this new project.')
+            setup_identity = click.prompt('What email do you want to use as your identity?', None)
+            setup_bibSaveUrl = click.prompt('Where do you want to save your biblatex?', None)
+            setup_autoSaveBib = click.prompt('Do you want to automatically save to biblatex upon loading', False)
+
+            project.config.identity = setup_identity
+            project.config.bibSaveUrl = setup_bibSaveUrl
+            project.config.autoSaveBib = setup_autoSaveBib
+
             # Create new Persitence file
             project.save()
 
