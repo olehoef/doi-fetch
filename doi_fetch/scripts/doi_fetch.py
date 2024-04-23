@@ -4,22 +4,52 @@ from doi_fetch.utils.rest import rest
 from doi_fetch.utils.citation import getCitation
 import click
 import inquirer
-import sys
+import sys, os
 from trogon import tui
 
 ## DOI-FETCH                                                                            
 @tui()
 @click.group()
 @click.option('--new', '-n', is_flag=True, default=False, help='Create a new project.')
-@click.argument('project_name')
+@click.argument('project_name', required=False, default=None)
 @click.pass_context
 def doi_fetch(ctx, new, project_name):
+    '''Use 'all' to list all projects.'''
 
     # Initiating config and works bases
     project = Project(project_name)
 
+    # Show all projects
+    if project_name == 'all':
+        dirname = 'persistence'
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        persistence_dir_path = os.path.join(project_root, dirname)
+        project_names = os.listdir(persistence_dir_path)
+        available_projects = []
+        for file_name in project_names:
+            name = file_name.replace('.json', '')
+            project = Project(name)
+            project.load()
+            works_no = len(project.works)
+            display_string = f'{name}  ({works_no})'
+            available_projects.append((display_string, name))
+
+        choices = [
+            inquirer.List(
+                'project',
+                message=click.style('Please Specify Project', bold=True, fg=(211,211,211)),
+                choices=available_projects,
+                carousel=True
+            )
+        ]
+        response = inquirer.prompt(choices)
+        chosen_project = response.get('project')
+        project = Project(chosen_project)
+        project.load()
+
+    
     # Only execute if project is given
-    if project != None:
+    elif project != None:
 
         # Access existing project
         if not new:
@@ -28,7 +58,7 @@ def doi_fetch(ctx, new, project_name):
                 project.load()
             except:
                 click.secho(f'Error: ', nl=False, fg='red', bold=True)
-                click.echo(f'Poject <{project}> does not exist.')
+                click.echo(f'Poject <{project_name}> does not exist.')
                 click.ClickException('error')
             
         # Create new project
@@ -47,6 +77,9 @@ def doi_fetch(ctx, new, project_name):
 
             # Load new project
             project.load()
+    
+    else:
+        click.echo('Project == None')
     
     # Add objects to pass context
     ctx.obj = {'project': project}
