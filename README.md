@@ -1,5 +1,5 @@
 # DOI-FETCH
-CLI tool to manage academic references. More over doi-fetch can serve references to e.g. MS Excel, which allows you to use them as data types. 
+CLI tool to manage academic references. Moreover, doi-fetch can serve references to e.g. MS Excel, which allows you to use them as data types. 
 
 ## Installation
 
