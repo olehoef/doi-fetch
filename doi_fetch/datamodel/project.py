@@ -62,11 +62,9 @@ class Project:
         self.works.append(work_data)
 
     def removeWork(self, doi):
-        # Find the index of the work with the specified DOI
         index_to_remove = next((index for index, work in enumerate(self.works) if work.doi.lower() == doi.lower()), None)
 
         if index_to_remove is not None:
-            # Remove the work from the list
             removed_work = self.works.pop(index_to_remove)
             return removed_work
         else:

@@ -16,10 +16,8 @@ from trogon import tui
 def doi_fetch(ctx, new, project_name):
     '''Use 'all' to list all projects.'''
 
-    # Initiating config and works bases
     project = Project(project_name)
 
-    # Show all projects
     if project_name == 'all':
         dirname = 'persistence'
         project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -48,12 +46,9 @@ def doi_fetch(ctx, new, project_name):
         project.load()
 
     
-    # Only execute if project is given
     elif project != None:
 
-        # Access existing project
         if not new:
-            # Check if project exists
             try:
                 project.load()
             except:
@@ -61,7 +56,6 @@ def doi_fetch(ctx, new, project_name):
                 click.echo(f'Poject <{project_name}> does not exist.')
                 click.ClickException('error')
             
-        # Create new project
         else:
             click.echo('Please provide some information to configure this new project.')
             setup_identity = click.prompt('What email do you want to use as your identity?', None)
@@ -72,16 +66,13 @@ def doi_fetch(ctx, new, project_name):
             project.config.bibSaveUrl = setup_bibSaveUrl
             project.config.autoSaveBib = setup_autoSaveBib
 
-            # Create new Persitence file
             project.save()
 
-            # Load new project
             project.load()
     
     else:
         click.echo('Project == None')
     
-    # Add objects to pass context
     ctx.obj = {'project': project}
 
 ## ADD                                                                                      
@@ -91,11 +82,9 @@ def doi_fetch(ctx, new, project_name):
 def add(ctx, doi):
     '''Add new Work.'''
 
-    # Define objects from pass context
     project = ctx.obj['project']
 
 
-    # Add and display work
     requestedWork = project.searchWork(doi)
     if requestedWork != None:
         click.secho('Work exists already.', fg=(255,140,0))

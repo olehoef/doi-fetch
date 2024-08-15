@@ -19,7 +19,6 @@ def getSJR(search_term, search_column, year):
     with open(sjr_file_path, 'r') as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=';')
         
-        # Iterate through the rows to find the matching entry
         for row in csv_reader:
             if row[search_column][:8] == search_term:
                 sjr_value = row.get('SJR', 'N/A')
